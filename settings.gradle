@@ -1,0 +1,5 @@
+rootProject.name = 'taxi-project'
+include 'taxi-domain'
+include 'taxi-rest'
+include 'taxi-repository'
+
