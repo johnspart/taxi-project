@@ -5,6 +5,7 @@ import com.taxi.domain.service.PassengerService;
 import com.taxi.entities.Passenger;
 import com.taxi.repository.PassengerRepository;
 import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,11 +44,16 @@ public class PassengerServiceTest {
     public void getAllPassenger() {
         Mockito.when(this.passengerRepository.findAll()).thenReturn(this.passengers);
         List<PassengerModel> passengers = this.passengerService.getAllPassenger();
+        Assertions.assertNotNull(passengers);
+        Assertions.assertEquals(passengers.size(), 1);
+        Assertions.assertEquals(passengers.get(0).getId(), this.principalPassenger.getId());
     }
     @Test
     public void getPassengerById() {
         Long passengerId = 1L;
         Mockito.when(this.passengerRepository.findById(passengerId)).thenReturn(Optional.of(this.principalPassenger));
         PassengerModel passenger = this.passengerService.getPassengerById(passengerId);
+        Assertions.assertNotNull(passenger);
+        Assertions.assertEquals(passenger.getId(), this.principalPassenger.getId());
     }
 }

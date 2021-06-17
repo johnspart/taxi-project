@@ -1,5 +1,5 @@
 package com.taxi.domain.model;
-public class DistanceKMGeneric<T> implements Comparable<Double>{
+public class DistanceKMGeneric<T> implements Comparable<DistanceKMGeneric<T>> {
     private T value;
     private Double distance;
     public T getValue() {
@@ -15,7 +15,7 @@ public class DistanceKMGeneric<T> implements Comparable<Double>{
         this.distance = distance;
     }
     @Override
-    public int compareTo(Double o) {
-        return this.distance.compareTo(o);
+    public int compareTo(DistanceKMGeneric<T> o) {
+        return this.distance.compareTo(o.getDistance());
     }
 }

@@ -25,7 +25,14 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 logging:
+  level:
+    springfox:
+      documentation: DEBUG
   path: /tmp/logs
   file:
     max-size: 10MB
+springfox:
+  documentation:
+    swagger-ui:
+      base-url: /documentation
 

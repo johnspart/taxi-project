@@ -11,6 +11,7 @@ import com.taxi.entities.util.Point;
 import com.taxi.repository.DriverRepository;
 import com.taxi.repository.PassengerRepository;
 import com.taxi.repository.TravelRepository;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,9 +47,19 @@ public class TravelServiceTest {
         driversData = new ArrayList<>();
         this.principalTravel = new Travel();
         driver = new Driver();
-        driver.setId(1L);
+        driver.setId(2L);
         driver.setDateOfBirth(LocalDate.now());
         Point point = new Point();
+        point.setLatitude(-52.2131231231321);
+        point.setLongitude(-52.123532523243241);
+        driver.setLastLocation(point);
+        driver.setName("test2");
+        driver.setLastName("test2LasName");
+        this.driversData.add(driver);
+        driver = new Driver();
+        driver.setId(1L);
+        driver.setDateOfBirth(LocalDate.now());
+        point = new Point();
         point.setLatitude(123.2131);
         point.setLongitude(1231.1231);
         driver.setLastLocation(point);
@@ -79,6 +90,9 @@ public class TravelServiceTest {
         Mockito.when(this.driverRepository.getAllDriversAvailable()).thenReturn(this.driversData);
         Mockito.when(this.travelRepository.save(Mockito.any())).thenReturn(this.principalTravel);
         TravelModel newTravel = this.travelService.newTravel(passengerModel);
+        Assertions.assertNotNull(newTravel);
+        Assertions.assertNull(newTravel.getEndDateTime());
+        Assertions.assertTrue(newTravel.getStartDateTime().isAfter(this.principalTravel.getStartDateTime()));
     }
     @Test
     public void completeTravel() {
@@ -88,11 +102,17 @@ public class TravelServiceTest {
         endPoint.setLongitude(1231.1231);
         Mockito.when(this.travelRepository.save(Mockito.any())).thenReturn(this.principalTravel);
         TravelModel travelComplete = this.travelService.completeTravel(travelModel, endPoint);
+        Assertions.assertNotNull(travelComplete);
+        Assertions.assertNotNull(travelComplete.getEndDateTime());
+        Assertions.assertEquals(travelComplete.getStartDateTime(), this.principalTravel.getStartDateTime());
     }
     @Test
     public void getAllActiveTravels() {
         Mockito.when(this.travelRepository.getAllActives()).thenReturn(this.travelsData);
         List<TravelModel> travels = this.travelService.getAllActiveTravels();
+        Assertions.assertNotNull(travels);
+        Assertions.assertEquals(travels.size(), 1);
+        Assertions.assertEquals(travels.get(0).getStartDateTime(), this.principalTravel.getStartDateTime());
     }
     @Test
     public void getDriverNearby() {
@@ -103,5 +123,8 @@ public class TravelServiceTest {
         passengerModel.setLastLocation(point);
         Mockito.when(this.driverRepository.getAllDriversAvailable()).thenReturn(this.driversData);
         List<DriverModel> driversNearby = this.travelService.getDriverNearby(passengerModel);
+        Assertions.assertNotNull(driversNearby);
+        Assertions.assertEquals(driversNearby.size(), 2);
+        Assertions.assertEquals(driversNearby.get(0).getId(), this.driver.getId());
     }
 }

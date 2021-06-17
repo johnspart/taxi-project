@@ -6,25 +6,30 @@ import com.taxi.domain.model.TravelModel;
 import com.taxi.domain.service.TravelService;
 import com.taxi.util.GenericTwoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
 @RestController
 @RequestMapping("/travel")
 public class TravelAPI {
     @Autowired
     private TravelService travelService;
-    public Mono<TravelModel> createNewTravel(PassengerModel passengerModel) {
+    @PostMapping(value = "/newTravel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<TravelModel> createNewTravel(@RequestBody PassengerModel passengerModel) {
         return Mono.just(travelService.newTravel(passengerModel));
     }
-    public Mono<TravelModel> completeTravel(GenericTwoWrapper<TravelModel, PointModel> wrapperData) {
+    @PostMapping(value = "/completeTravel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Mono<TravelModel> completeTravel(@RequestBody GenericTwoWrapper<TravelModel, PointModel> wrapperData) {
         return Mono.just(this.travelService.completeTravel(wrapperData.getValueOne(), wrapperData.getValueTwo()));
     }
+    @GetMapping(value = "getAllTravelAvailable", produces = MediaType.APPLICATION_JSON_VALUE)
     public Flux<TravelModel> getAllTravelAvailable() {
         return Flux.fromIterable(this.travelService.getAllActiveTravels());
     }
-    public Flux<DriverModel> requestTravel(PassengerModel passengerModel) {
+    @PostMapping(value = "/requestTravel", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Flux<DriverModel> requestTravel(@RequestBody PassengerModel passengerModel) {
         return Flux.fromIterable(this.travelService.getDriverNearby(passengerModel));
     }
 }
