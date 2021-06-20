@@ -15,7 +15,7 @@ Creado con spring webflux. esta compuesto por 3 proyectos internos:
 
 ## Aplicación
 
-El comando para iniciar la aplicación es ``./gradlew boot-webflux:bootRun``
+El comando para iniciar la aplicación es ``./gradlew bootRun``
 
 ## Prerrequisitos
 * Java 11 instalado 
